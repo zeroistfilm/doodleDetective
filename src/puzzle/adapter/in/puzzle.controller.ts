@@ -17,16 +17,30 @@ import {FileMetadata} from "./dto/fileMetadata.dto";
 import { ApiBody, ApiConsumes, ApiOperation} from "@nestjs/swagger";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import axios from "axios";
 
 @Controller('puzzle')
 export class PuzzleController {
   constructor(private readonly puzzleService: PuzzleService) {}
 
   @Post()
-  create(@Body() createPuzzleDto: CreatePuzzleDto) {
-    return this.puzzleService.create(createPuzzleDto);
+  async create(@Body() createPuzzleDto: CreatePuzzleDto) {
+    return await this.puzzleService.create(createPuzzleDto);
   }
 
+  @Get('completion')
+  async completion(@Req() req) {
+    const APIKEY  = '0e970ee481286709f9e3f84e8085e0892520bcd0';
+    console.log(req.body);
+
+    // const image = await axios.get(response.urls.get, {
+    //   headers: {
+    //     'Authorization': 'TOKEN ' + APIKEY,
+    //   }
+    // })
+    // console.log(image)
+
+  }
   @ApiOperation({ summary: '프로젝트의 썸네일 등록' })
   // @ApiBearerAuth('accessToken')
   // @UseGuards(AccessTokenGuard)

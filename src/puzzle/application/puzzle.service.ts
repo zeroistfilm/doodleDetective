@@ -11,12 +11,12 @@ export class PuzzleService {
     private readonly stableDiffusionClient: StableDiffusionClient,
   ) {
   }
-  create(createPuzzleDto: CreatePuzzleDto) {
+  async create(createPuzzleDto: CreatePuzzleDto) {
     const puzzle = new Puzzle();
     puzzle.name = createPuzzleDto.name;
     puzzle.mask = createPuzzleDto.mask;
-
-    return this.stableDiffusionClient.makeMaskImage(puzzle.mask);
+    return await this.stableDiffusionClient.getPuzzleImage();
+    // return this.stableDiffusionClient.makeMaskImage(puzzle.mask);
   }
 
   uploadFile() {
