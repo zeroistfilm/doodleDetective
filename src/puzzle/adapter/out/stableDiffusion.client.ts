@@ -24,7 +24,13 @@ export class StableDiffusionClient {
         let prediction = await replicate.predictions.create({
             version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
             input: {
-                prompt: "draw of a whale by realistic",
+                prompt: "I couldn't find information on the specific image you mentioned, but I'll use my imagination to describe it for you. The floating cheesecake island seems to have come straight from a fantastical world. This small island, composed of a giant cheesecake, hovers among the blue sky and white clouds.\n" +
+                    "\n" +
+                    "The surface of the island is made up of a smooth cream cheese and a golden brown butter base, while around the island, various fruits form a garden-like border along its edge. Fruits such as strawberries, blueberries, and raspberries adorn small trees and vines that line the island's perimeter, blending beautifully with the delicious cheesecake to create a dreamy landscape.\n" +
+                    "\n" +
+                    "In the center of the island, a small waterfall cascades, with the stream consisting of melted cream cheese and fruit juices. Curious animals that visit this delicious island drink the melted fruit juices, fly around, or happily play on the island's surface.\n" +
+                    "\n" +
+                    "What's amazing about this island is that the harmony of fruits and cheesecake naturally blends, blurring the boundaries between the real world and the fairy-tale world. This place is a floating cheesecake island filled with enchanting beauty and delicious scents, offering a view that one would expect to find only in a fairy tale.",
             },
             webhook: "http://localhost:3000/puzzle/completion",
         });
