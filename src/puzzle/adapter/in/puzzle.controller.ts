@@ -28,18 +28,10 @@ export class PuzzleController {
     return await this.puzzleService.create(createPuzzleDto);
   }
 
-  @Get('completion')
+  @Post('completion')
   async completion(@Req() req) {
     const APIKEY  = '0e970ee481286709f9e3f84e8085e0892520bcd0';
     console.log(req.body);
-
-    // const image = await axios.get(response.urls.get, {
-    //   headers: {
-    //     'Authorization': 'TOKEN ' + APIKEY,
-    //   }
-    // })
-    // console.log(image)
-
   }
   @ApiOperation({ summary: '프로젝트의 썸네일 등록' })
   // @ApiBearerAuth('accessToken')

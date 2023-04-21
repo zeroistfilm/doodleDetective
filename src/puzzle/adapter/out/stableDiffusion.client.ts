@@ -23,11 +23,13 @@ export class StableDiffusionClient {
                 input: {
                     image: "https://replicate.delivery/pbxt/HtGQBfA5TrqFYZBf0UL18NTqHrzt8UiSIsAkUuMHtjvFDO6p/overture-creations-5sI6fQgYIuo.png",
                     mask: "https://replicate.delivery/pbxt/HtGQBqO9MtVbPm0G0K43nsvvjBB0E0PaWOhuNRrRBBT4ttbf/mask.png",
-                    //"prompt": "Face of a yellow cat, high resolution, sitting on a park bench",
+                    "prompt": "Face of a yellow cat, high resolution, sitting on a park bench",
                     "num_outputs": 1,
                     "guidance_scale": 7.5,
                     "num_inference_steps": 25,
-                }
+                },
+                webhook: "https://port-0-doodledetective-1maxx2algqdy9pu.sel3.cloudtype.app/puzzle/completion",
+                webhook_events_filter: ["completed"]
             }
             , {
                 headers: {
@@ -43,37 +45,7 @@ export class StableDiffusionClient {
             }
         });
         console.log(res2.data)
-        // const replicate = new Replicate({
-        //     auth: APIKEY,
-        // });
-        // let prediction = await replicate.predictions.create({
-        //     version: "27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478",
-        //     input: {
-        //         prompt: "I couldn't find information on the specific image you mentioned, but I'll use my imagination to describe it for you. The floating cheesecake island seems to have come straight from a fantastical world. This small island, composed of a giant cheesecake, hovers among the blue sky and white clouds.\n" +
-        //             "\n" +
-        //             "The surface of the island is made up of a smooth cream cheese and a golden brown butter base, while around the island, various fruits form a garden-like border along its edge. Fruits such as strawberries, blueberries, and raspberries adorn small trees and vines that line the island's perimeter, blending beautifully with the delicious cheesecake to create a dreamy landscape.\n" +
-        //             "\n" +
-        //             "In the center of the island, a small waterfall cascades, with the stream consisting of melted cream cheese and fruit juices. Curious animals that visit this delicious island drink the melted fruit juices, fly around, or happily play on the island's surface.\n" +
-        //             "\n" +
-        //             "What's amazing about this island is that the harmony of fruits and cheesecake naturally blends, blurring the boundaries between the real world and the fairy-tale world. This place is a floating cheesecake island filled with enchanting beauty and delicious scents, offering a view that one would expect to find only in a fairy tale.",
-        //     },
-        //     webhook: "http://localhost:3000/puzzle/completion",
-        // });
-        // console.log(prediction)
-        //
-        //
-        // const response = await replicate.predictions.get(prediction.id);
-        // console.log(response)
-        //zz4ibbonubfz7carwiefibzgga
-        // //time sleep 10s
-        // await new Promise(resolve => setTimeout(resolve, 10000));
-        //
-        // const image = await axios.get(response.urls.get, {
-        //   headers: {
-        //     'Authorization': 'TOKEN ' + APIKEY,
-        //   }
-        // })
-        // return image.data.output[0]
+        return res2.data.output[0]
     }
 
     async makeMaskImage(maskData) {
