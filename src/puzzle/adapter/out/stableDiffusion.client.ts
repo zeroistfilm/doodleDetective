@@ -4,6 +4,8 @@ import https from "https";
 import { createCanvas } from 'canvas';
 import { writeFileSync } from 'fs';
 const Replicate = require("replicate");
+import fetch from 'node-fetch';
+
 @Injectable()
 export class StableDiffusionClient {
     // instance = axios.create({
