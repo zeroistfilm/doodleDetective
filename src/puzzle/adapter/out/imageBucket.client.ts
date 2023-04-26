@@ -1,7 +1,7 @@
-import {UploadApiErrorResponse, UploadApiResponse, v2 as cloudinary } from 'cloudinary';
-import {Resize} from '@cloudinary/url-gen/actions'
+import {v2 as cloudinary } from 'cloudinary';
+
 import { Injectable } from "@nestjs/common";
-import axios from "axios";
+
 
 
 @Injectable()
