@@ -1,9 +1,9 @@
 import {Inject, Injectable} from '@nestjs/common';
 import { CreatePuzzleDto } from '../adapter/in/dto/create-puzzle.dto';
 import { UpdatePuzzleDto } from '../adapter/in/dto/update-puzzle.dto';
-import {StableDiffusionClient} from "../adapter/out/stableDiffusion.client";
+import {StableDiffusionClient} from "../adapter/out/client/stableDiffusion.client";
 import {Mask, Puzzle} from "../domain/puzzle.domain";
-import { ImageBucketClient } from "../adapter/out/imageBucket.client";
+import { ImageBucketClient } from "../adapter/out/client/imageBucket.client";
 
 @Injectable()
 export class PuzzleService {
