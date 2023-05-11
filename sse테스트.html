@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Server-Sent Events with NestJS</title>
+</head>
+<body>
+<h1>Server-Sent Events with NestJS</h1>
+<div id="events"></div>
+
+<script>
+  const eventSource = new EventSource('http://localhost:3000/puzzle/event');
+  let eventCount = 0;
+
+  eventSource.onmessage = (event) => {
+    const eventDiv = document.getElementById('events');
+    const paragraph = document.createElement('p');
+    paragraph.textContent = event.data;
+    eventDiv.appendChild(paragraph);
+
+    eventCount++;
+
+    if (eventCount === 10) {
+      eventSource.close();
+    }
+  };
+</script>
+</body>
+</html>

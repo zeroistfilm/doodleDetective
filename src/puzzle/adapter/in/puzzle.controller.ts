@@ -1,20 +1,47 @@
-import { Body, Controller, Param, Post, Req, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
+import {Body, Controller, Get, Param, Post, Req, Res, UploadedFile, UseInterceptors} from "@nestjs/common";
 import { PuzzleService } from "../../application/puzzle.service";
 import { CreatePuzzleDto } from "./dto/create-puzzle.dto";
 import { FileMetadata } from "./dto/fileMetadata.dto";
 import { ApiBody, ApiConsumes, ApiOperation } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
+import { Response } from 'express';
 
 @Controller('puzzle')
 export class PuzzleController {
-  constructor(private readonly puzzleService: PuzzleService) {}
+  constructor(private readonly puzzleService: PuzzleService,
+              ) {}
+  private clients: Response[] = [];
 
   @Post()
   async create(@Body() createPuzzleDto: CreatePuzzleDto) {
     return await this.puzzleService.create(createPuzzleDto);
   }
 
+
+  @Get('event')
+  sendEvents( @Res() res: Response) {
+    res.set({
+      'Cache-Control': 'no-cache',
+      'Content-Type': 'text/event-stream',
+      'Connection': 'keep-alive',
+    });
+    res.flushHeaders();
+
+    // 클라이언트를 배열에 추가합니다.
+    this.clients.push(res);
+
+    // 클라이언트 연결이 끊어지면 배열에서 제거합니다.
+    res.on('close', () => {
+      this.clients = this.clients.filter(client => client !== res);
+    });
+
+  }
+  sendToAllClients(data: string) {
+    for (const client of this.clients) {
+      client.write(`data: ${data}\n\n`);
+    }
+  }
 
   @Post('completion')
   async completion(@Req() req) {
@@ -62,8 +89,11 @@ export class PuzzleController {
     //   }
     // }
 
-    const outputImgUrl = req.body['output'][0];
-    return await this.puzzleService.completion(outputImgUrl);
+    // const outputImgUrl = req.body['output'][0];
+
+    this.sendToAllClients('Task is complete');
+
+    // return await this.puzzleService.completion(outputImgUrl);
   }
 
   @ApiOperation({ summary: '프로젝트의 썸네일 등록' })
