@@ -18,8 +18,52 @@ export class PuzzleController {
 
   @Post('completion')
   async completion(@Req() req) {
-    const APIKEY  = '0e970ee481286709f9e3f84e8085e0892520bcd0';
-    console.log(req.body);
+    //{
+    //   id: 'ioehiri3urcthf5b4enhz2rvne',
+    //   version: 'c28b92a7ecd66eee4aefcd8a94eb9e7f6c3805d5f06038165407fb5cb355ba67',
+    //   input: {
+    //     guidance_scale: 7.5,
+    //     image: 'http://res.cloudinary.com/dpyp2ng96/image/upload/v1683789169/pldgbcqmge3o0q71gfry.png',
+    //     mask: 'http://res.cloudinary.com/dpyp2ng96/image/upload/v1683789170/hsnt4ndsedsdzdf09z7p.png',
+    //     num_inference_steps: 25,
+    //     num_outputs: 1,
+    //     prompt: 'Face of a yellow cat, high resolution, sitting on a park bench'
+    //   },
+    //   logs: 'Using seed: 32120\n' +
+    //     '  0%|          | 0/26 [00:00<?, ?it/s]\n' +
+    //     '  8%|▊         | 2/26 [00:00<00:01, 15.19it/s]\n' +
+    //     ' 15%|█▌        | 4/26 [00:00<00:01, 14.55it/s]\n' +
+    //     ' 23%|██▎       | 6/26 [00:00<00:01, 14.38it/s]\n' +
+    //     ' 31%|███       | 8/26 [00:00<00:01, 14.14it/s]\n' +
+    //     ' 38%|███▊      | 10/26 [00:00<00:01, 13.68it/s]\n' +
+    //     ' 46%|████▌     | 12/26 [00:00<00:01, 13.78it/s]\n' +
+    //     ' 54%|█████▍    | 14/26 [00:00<00:00, 13.90it/s]\n' +
+    //     ' 62%|██████▏   | 16/26 [00:01<00:00, 13.73it/s]\n' +
+    //     ' 69%|██████▉   | 18/26 [00:01<00:00, 13.81it/s]\n' +
+    //     ' 77%|███████▋  | 20/26 [00:01<00:00, 13.84it/s]\n' +
+    //     ' 85%|████████▍ | 22/26 [00:01<00:00, 13.92it/s]\n' +
+    //     ' 92%|█████████▏| 24/26 [00:01<00:00, 13.72it/s]\n' +
+    //     '100%|██████████| 26/26 [00:01<00:00, 14.26it/s]\n' +
+    //     '100%|██████████| 26/26 [00:01<00:00, 14.02it/s]\n',
+    //   output: [
+    //     'https://replicate.delivery/pbxt/OETst8heSJ20RaFge7Iso4x39RWATpbe2nPRvgpuXWS27I1hA/out-0.png'
+    //   ],
+    //   error: null,
+    //   status: 'succeeded',
+    //   created_at: '2023-05-11T07:12:51.101756Z',
+    //   started_at: '2023-05-11T07:12:56.568931Z',
+    //   completed_at: '2023-05-11T07:12:59.585314Z',
+    //   webhook: 'https://port-0-doodledetective-1maxx2algqdy9pu.sel3.cloudtype.app/puzzle/completion',
+    //   webhook_events_filter: [ 'completed' ],
+    //   metrics: { predict_time: 3.016383 },
+    //   urls: {
+    //     cancel: 'https://api.replicate.com/v1/predictions/ioehiri3urcthf5b4enhz2rvne/cancel',
+    //     get: 'https://api.replicate.com/v1/predictions/ioehiri3urcthf5b4enhz2rvne'
+    //   }
+    // }
+
+    const outputImgUrl = req.body['output'][0];
+    return await this.puzzleService.completion(outputImgUrl);
   }
 
   @ApiOperation({ summary: '프로젝트의 썸네일 등록' })

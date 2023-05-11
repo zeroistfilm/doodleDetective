@@ -1,8 +1,5 @@
 import {v2 as cloudinary } from 'cloudinary';
-
 import { Injectable } from "@nestjs/common";
-
-
 
 @Injectable()
 export class ImageBucketClient{

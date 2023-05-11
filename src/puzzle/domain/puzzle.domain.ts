@@ -21,14 +21,23 @@ export class Puzzle {
     imgBase64: string;
     originalFileName: string;
     maskFileName: string;
+    diffFileName: string;
+
     originalImageUrl: string;
     maskImageUrl: string;
-
+    diffImageUrl: string;
     setOriginalImageUrl(originalFileName: string) {
         this.originalImageUrl = originalFileName;
     }
     setMaskImageUrl(maskFileName: string) {
         this.maskImageUrl = maskFileName;
+    }
+    setDiffImageUrl(diffImageUrl: string) {
+        this.diffImageUrl = diffImageUrl;
+    }
+
+    setDiffImgFileName(diffFileName: string) {
+        this.diffFileName = diffFileName;
     }
 
     getRandomFileName() {
@@ -66,5 +75,6 @@ export class Puzzle {
     removeFile() {
         fs.unlinkSync(this.originalFileName);
         fs.unlinkSync(this.maskFileName);
+        fs.unlinkSync(this.diffFileName);
     }
 }

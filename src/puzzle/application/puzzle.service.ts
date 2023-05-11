@@ -4,6 +4,7 @@ import { UpdatePuzzleDto } from '../adapter/in/dto/update-puzzle.dto';
 import {StableDiffusionClient} from "../adapter/out/client/stableDiffusion.client";
 import {Mask, Puzzle} from "../domain/puzzle.domain";
 import { ImageBucketClient } from "../adapter/out/client/imageBucket.client";
+import {ImgDownloadClient} from "../adapter/out/client/imgDownload.client";
 
 @Injectable()
 export class PuzzleService {
@@ -12,6 +13,8 @@ export class PuzzleService {
     private readonly stableDiffusionClient: StableDiffusionClient,
     @Inject(ImageBucketClient)
     private readonly imageBucketClient: ImageBucketClient,
+    @Inject(ImgDownloadClient)
+    private readonly imgDownloadClient: ImgDownloadClient,
   ) {
   }
   async create(createPuzzleDto: CreatePuzzleDto) {
@@ -23,15 +26,21 @@ export class PuzzleService {
     await puzzle.makeMaskImage();
     puzzle.setOriginalImageUrl(await this.imageBucketClient.uploadImage(puzzle.originalFileName));
     puzzle.setMaskImageUrl(await this.imageBucketClient.uploadImage(puzzle.maskFileName));
+    const resultUrl = await this.stableDiffusionClient.getPuzzleImage(puzzle.originalImageUrl, puzzle.maskImageUrl);
+    const downloadLocation = await this.imgDownloadClient.downloadImageAndSave(resultUrl);
+    puzzle.setDiffImgFileName(downloadLocation);
+    puzzle.setDiffImageUrl(await this.imageBucketClient.uploadImage(downloadLocation));
     puzzle.removeFile();
 
-    const resultUrl = await this.stableDiffusionClient.getPuzzleImage(puzzle.originalImageUrl, puzzle.maskImageUrl);
 
     return {
       originalUrl: puzzle.originalImageUrl,
       maskUrl: puzzle.maskImageUrl,
-      resultUrl: resultUrl
+      resultUrl: puzzle.diffImageUrl,
     };
+  }
+
+  async completion(imgUrl:string){
   }
 
   uploadFile(fileMetadata) {
