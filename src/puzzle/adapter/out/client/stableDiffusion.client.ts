@@ -37,7 +37,7 @@ export class StableDiffusionClient {
                 }
             })
 
-        await new Promise(resolve => setTimeout(resolve, 10000));
+        await new Promise(resolve => setTimeout(resolve, 7000));
         const res2 = await axios.get(`https://api.replicate.com/v1/predictions/${res.data.id}`, {
             headers: {
                 'authorization': `TOKEN ${APIKEY}`,

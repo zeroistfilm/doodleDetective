@@ -21,44 +21,23 @@ export class PuzzleService {
   ) {
   }
 
-  create(createPuzzleDto: CreatePuzzleDto) {
-    const puzzle = new Puzzle();
-    puzzle.name = createPuzzleDto.name;
-    puzzle.mask = createPuzzleDto.mask;
-    puzzle.imgBase64 = createPuzzleDto.imgBase64;
+  async create(createPuzzleDto: CreatePuzzleDto) {
+      const puzzle = new Puzzle();
+      puzzle.name = createPuzzleDto.name;
+      puzzle.mask = createPuzzleDto.mask;
+      puzzle.imgBase64 = createPuzzleDto.imgBase64;
+      await puzzle.makeOriginalImgFromBase64();
+      await puzzle.makeMaskImage();
+      puzzle.setOriginalImageUrl(await this.imageBucketClient.uploadImage(puzzle.originalFileName));
+      puzzle.setMaskImageUrl(await this.imageBucketClient.uploadImage(puzzle.maskFileName));
+      puzzle.removeFile();
 
-    return from(puzzle.makeOriginalImgFromBase64()).pipe(
-        switchMap(() => {
-          return puzzle.makeMaskImage()
-        }),
-        switchMap(() => {
-          return this.imageBucketClient.uploadImage(puzzle.originalFileName)
-        }),
-        switchMap((originalImageUrl: string) => {
-          puzzle.setOriginalImageUrl(originalImageUrl);
-          return this.imageBucketClient.uploadImage(puzzle.maskFileName);
-        }),
-        switchMap((maskImageUrl: string) => {
-          puzzle.setMaskImageUrl(maskImageUrl);
-          return this.stableDiffusionClient.getPuzzleImage(puzzle.originalImageUrl, puzzle.maskImageUrl);
-        }),
-        switchMap((resultUrl: string) => {
-          return this.imgDownloadClient.downloadImageAndSave(resultUrl)
-        }),
-        switchMap((downloadLocation: string) => {
-          puzzle.setDiffImgFileName(downloadLocation);
-          return this.imageBucketClient.uploadImage(downloadLocation);
-        }),
-        switchMap((diffImageUrl: string) => {
-          puzzle.setDiffImageUrl(diffImageUrl);
-          puzzle.removeFile();
-          return of({
-            originalUrl: puzzle.originalImageUrl,
-            maskUrl: puzzle.maskImageUrl,
-            resultUrl: puzzle.diffImageUrl,
-          });
-        })
-    );
+      const resultUrl = await this.stableDiffusionClient.getPuzzleImage(puzzle.originalImageUrl, puzzle.maskImageUrl);
+      const downloadLocation = await this.imgDownloadClient.downloadImageAndSave(resultUrl);
+      puzzle.setDiffImgFileName(downloadLocation);
+      puzzle.setDiffImageUrl(await this.imageBucketClient.uploadImage(downloadLocation));
+      puzzle.removeFile();
+
   }
 
   async completion(imgUrl: string) {
