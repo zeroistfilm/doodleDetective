@@ -37,14 +37,17 @@ export class StableDiffusionClient {
                 }
             })
 
-        await new Promise(resolve => setTimeout(resolve, 7000));
-        const res2 = await axios.get(`https://api.replicate.com/v1/predictions/${res.data.id}`, {
-            headers: {
-                'authorization': `TOKEN ${APIKEY}`,
-            }
-        });
+        // await new Promise(resolve => setTimeout(resolve, 7000));
+        // const res2 = await axios.get(`https://api.replicate.com/v1/predictions/${res.data.id}`, {
+        //     headers: {
+        //         'authorization': `TOKEN ${APIKEY}`,
+        //     }
+        // });
 
-        return res2.data.output[0];
+        return {
+            id : res.data.id,
+            // data : res2.data.output[0]
+        };
     }
 
 

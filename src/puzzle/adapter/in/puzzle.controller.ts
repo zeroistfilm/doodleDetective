@@ -12,10 +12,14 @@ export class PuzzleController {
   constructor(private readonly puzzleService: PuzzleService,
               ) {}
   private clients: Response[] = [];
+  private matchingPuzzleDone = {};
 
   @Post()
   async create(@Body() createPuzzleDto: CreatePuzzleDto) {
-    return await this.puzzleService.create(createPuzzleDto);
+    const result = await this.puzzleService.create(createPuzzleDto);
+    this.matchingPuzzleDone[result.id] = {...result};
+    return this.matchingPuzzleDone[result.id]
+
   }
 
 
@@ -89,10 +93,14 @@ export class PuzzleController {
     //     get: 'https://api.replicate.com/v1/predictions/ioehiri3urcthf5b4enhz2rvne'
     //   }
     // }
-
-    // const outputImgUrl = req.body['output'][0];
-
-    this.sendToAllClients(req.body['output'][0]);
+    const id = req.body['id'];
+    const outputImgUrl = req.body['output'][0];
+    const cloudinaryUrl = await this.puzzleService.convertToCloudinary(outputImgUrl);
+    this.matchingPuzzleDone[id] = {
+      ...this.matchingPuzzleDone[id],
+      resultUrl: cloudinaryUrl
+    };
+    this.sendToAllClients(JSON.stringify(this.matchingPuzzleDone[id]));
 
     // return await this.puzzleService.completion(outputImgUrl);
   }

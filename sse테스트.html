@@ -8,7 +8,7 @@
 <div id="events"></div>
 
 <script>
-  const eventSource = new EventSource('http://localhost:3000/puzzle/event');
+  const eventSource = new EventSource('https://port-0-doodledetective-1maxx2algqdy9pu.sel3.cloudtype.app/puzzle/event');
   let eventCount = 0;
 
   eventSource.onmessage = (event) => {
@@ -19,10 +19,11 @@
 
     eventCount++;
 
-    if (eventCount === 10) {
+    if (eventCount === 1) {
       eventSource.close();
     }
   };
+
 </script>
 </body>
 </html>

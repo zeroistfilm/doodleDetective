@@ -32,17 +32,27 @@ export class PuzzleService {
       puzzle.setMaskImageUrl(await this.imageBucketClient.uploadImage(puzzle.maskFileName));
 
 
-      const resultUrl = await this.stableDiffusionClient.getPuzzleImage(puzzle.originalImageUrl, puzzle.maskImageUrl);
-      const downloadLocation = await this.imgDownloadClient.downloadImageAndSave(resultUrl);
-      puzzle.setDiffImgFileName(downloadLocation);
-      puzzle.setDiffImageUrl(await this.imageBucketClient.uploadImage(downloadLocation));
+      const requestedPuzzle = await this.stableDiffusionClient.getPuzzleImage(puzzle.originalImageUrl, puzzle.maskImageUrl);
+
+
+
+      // puzzle.setDiffImgFileName(downloadLocation);
+      // puzzle.setDiffImageUrl(await this.imageBucketClient.uploadImage(downloadLocation));
       puzzle.removeFile();
 
       return {
+          id : requestedPuzzle.id,
           originalUrl: puzzle.originalImageUrl,
           maskUrl: puzzle.maskImageUrl,
-          resultUrl: puzzle.diffImageUrl,
+          // resultUrl: puzzle.diffImageUrl,
       };
+  }
+
+
+  async convertToCloudinary(url: string) {
+      const downloadLocation = await this.imgDownloadClient.downloadImageAndSave(url);
+      const cloudinaryUrl = await this.imageBucketClient.uploadImage(downloadLocation);
+      return cloudinaryUrl;
   }
 
   async completion(imgUrl: string) {

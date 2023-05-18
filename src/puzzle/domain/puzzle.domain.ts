@@ -75,6 +75,6 @@ export class Puzzle {
     removeFile() {
         fs.unlinkSync(this.originalFileName);
         fs.unlinkSync(this.maskFileName);
-        fs.unlinkSync(this.diffFileName);
+        // fs.unlinkSync(this.diffFileName);
     }
 }
