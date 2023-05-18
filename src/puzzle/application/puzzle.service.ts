@@ -30,7 +30,7 @@ export class PuzzleService {
       await puzzle.makeMaskImage();
       puzzle.setOriginalImageUrl(await this.imageBucketClient.uploadImage(puzzle.originalFileName));
       puzzle.setMaskImageUrl(await this.imageBucketClient.uploadImage(puzzle.maskFileName));
-      puzzle.removeFile();
+
 
       const resultUrl = await this.stableDiffusionClient.getPuzzleImage(puzzle.originalImageUrl, puzzle.maskImageUrl);
       const downloadLocation = await this.imgDownloadClient.downloadImageAndSave(resultUrl);
@@ -38,6 +38,11 @@ export class PuzzleService {
       puzzle.setDiffImageUrl(await this.imageBucketClient.uploadImage(downloadLocation));
       puzzle.removeFile();
 
+      return {
+          originalUrl: puzzle.originalImageUrl,
+          maskUrl: puzzle.maskImageUrl,
+          resultUrl: puzzle.diffImageUrl,
+      };
   }
 
   async completion(imgUrl: string) {
