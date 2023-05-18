@@ -73,8 +73,10 @@ export class Puzzle {
     }
 
     removeFile() {
-        fs.unlinkSync(this.originalFileName);
-        fs.unlinkSync(this.maskFileName);
+        console.log(this.originalFileName)
+        console.log(this.maskFileName)
+        // fs.unlinkSync(this.originalFileName);
+        // fs.unlinkSync(this.maskFileName);
         // fs.unlinkSync(this.diffFileName);
     }
 }
