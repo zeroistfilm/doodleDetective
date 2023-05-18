@@ -11,7 +11,7 @@ import { Response } from 'express';
 export class PuzzleController {
   constructor(private readonly puzzleService: PuzzleService,
               ) {}
-  private clients: Response[] = [];
+  private clients = {};
   private matchingPuzzleDone = {};
 
   @Post()
@@ -19,12 +19,11 @@ export class PuzzleController {
     const result = await this.puzzleService.create(createPuzzleDto);
     this.matchingPuzzleDone[result.id] = {...result};
     return this.matchingPuzzleDone[result.id]
-
   }
 
 
-  @Get('event')
-  sendEvents( @Res() res: Response) {
+  @Get('event/:id')
+  sendEvents(@Res() res: Response, @Param('id') id: string) {
     res.set({
       'Cache-Control': 'no-cache',
       'Content-Type': 'text/event-stream',
@@ -33,19 +32,18 @@ export class PuzzleController {
     res.flushHeaders();
 
     // 클라이언트를 배열에 추가합니다.
-    this.clients.push(res);
+    this.clients[id] = res ;
 
     // 클라이언트 연결이 끊어지면 배열에서 제거합니다.
     res.on('close', () => {
-      this.clients = this.clients.filter(client => client !== res);
+        delete this.clients[id];
     });
 
   }
 
-  sendToAllClients(data: string) {
-    for (const client of this.clients) {
-      client.write(`data: ${data}\n\n`);
-    }
+  sendToAllClients(id, data: string) {
+
+      this.clients[id].write(`data: ${data}\n\n`);
   }
 
   @Post('completion')
@@ -100,7 +98,7 @@ export class PuzzleController {
       ...this.matchingPuzzleDone[id],
       resultUrl: cloudinaryUrl
     };
-    this.sendToAllClients(JSON.stringify(this.matchingPuzzleDone[id]));
+    this.sendToAllClients(id, JSON.stringify(this.matchingPuzzleDone[id]));
 
     // return await this.puzzleService.completion(outputImgUrl);
   }
