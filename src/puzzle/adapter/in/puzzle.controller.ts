@@ -37,6 +37,7 @@ export class PuzzleController {
     });
 
   }
+
   sendToAllClients(data: string) {
     for (const client of this.clients) {
       client.write(`data: ${data}\n\n`);
@@ -91,7 +92,7 @@ export class PuzzleController {
 
     // const outputImgUrl = req.body['output'][0];
 
-    this.sendToAllClients('Task is complete');
+    this.sendToAllClients(req.body['output'][0]);
 
     // return await this.puzzleService.completion(outputImgUrl);
   }
